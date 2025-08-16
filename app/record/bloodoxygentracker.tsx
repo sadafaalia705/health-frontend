@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Dimensions, SafeAreaView, StatusBar } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import { Heart, Calendar, TrendingUp, AlertCircle, Check, Activity } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Activity, AlertCircle, Calendar, Check } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Dimensions, SafeAreaView, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 import BASE_URL from "../../src/config";
 
 interface BloodOxygenRecord {
@@ -232,7 +232,7 @@ const BloodOxygenTracker = () => {
 
   return (
     <LinearGradient
-      colors={['#e3f2fd', '#fce4ec']}
+      colors={['#fce4ec', '#fce4ec']}
       style={{ flex: 1 }}
     >
       <SafeAreaView className="flex-1">
@@ -243,56 +243,57 @@ const BloodOxygenTracker = () => {
           bounces={true}
         >
           {/* Header */}
-          <View className="flex-row items-center justify-center mt-6 mb-2">
-            <Activity className="w-6 h-6 text-[#00b8f1] mr-8" />
-            <Text className="text-2xl font-bold text-gray-800">Blood Oxygen Level</Text>
-          </View>
+         <View className="flex-row items-center justify-center mt-20 mb-7">
+  <Activity className="w-6 h-6 text-[#00b8f1] mr-2" />
+  <Text className="text-2xl font-bold text-gray-800">Blood Oxygen Level</Text>
+</View>
 
           {/* Input Form */}
           <View className="m-2 p-6 rounded-2xl">
-            <View className="mb-4">
-              <Text className="text-gray-600 mb-2">Blood Oxygen Level (%)</Text>
-              <TextInput
-                className="border border-black rounded-lg p-4 text-lg bg-transparent"
-                placeholder="e.g., 98"
-                value={oxygenLevel}
-                onChangeText={setOxygenLevel}
-                keyboardType="numeric"
-                maxLength={3}
-              />
-            </View>
+  <View className="mb-4">
+    <Text className="text-gray-600 mb-2">Blood Oxygen Level (%)</Text>
+    <TextInput
+      className=" rounded-lg p-4 text-lg bg-white"   // changed bg-transparent → bg-white
+      placeholder="e.g., 98"
+      value={oxygenLevel}
+      onChangeText={setOxygenLevel}
+      keyboardType="numeric"
+      maxLength={3}
+    />
+  </View>
 
-            <View className="mb-4">
-              <Text className="text-gray-600 mb-2">Heart Rate (optional, bpm)</Text>
-              <TextInput
-                className="border border-black rounded-lg p-4 text-lg bg-transparent"
-                placeholder="e.g., 72"
-                value={heartRate}
-                onChangeText={setHeartRate}
-                keyboardType="numeric"
-                maxLength={3}
-              />
-            </View>
+  <View className="mb-4">
+    <Text className="text-gray-600 mb-2">Heart Rate (optional, bpm)</Text>
+    <TextInput
+      className="rounded-lg p-4 text-lg bg-white"   // changed bg-transparent → bg-white
+      placeholder="e.g., 72"
+      value={heartRate}
+      onChangeText={setHeartRate}
+      keyboardType="numeric"
+      maxLength={3}
+    />
+  </View>
 
-            <View className="mb-6">
-              <Text className="text-gray-600 mb-2">Notes (optional)</Text>
-              <TextInput
-                className="border border-black rounded-lg p-4 text-lg h-20 bg-transparent"
-                placeholder="Add any notes..."
-                value={notes}
-                onChangeText={setNotes}
-                multiline
-                textAlignVertical="top"
-              />
-            </View>
+  <View className="mb-6">
+    <Text className="text-gray-600 mb-2">Notes (optional)</Text>
+    <TextInput
+      className="rounded-lg p-4 text-lg h-20 bg-white"   // changed bg-transparent → bg-white
+      placeholder="Add any notes..."
+      value={notes}
+      onChangeText={setNotes}
+      multiline
+      textAlignVertical="top"
+    />
+  </View>
 
-            <TouchableOpacity
-              className="bg-black rounded-2xl p-3 items-center"
-              onPress={recordOxygen}
-            >
-              <Text className="text-white text-lg font-semibold">Record Oxygen Level</Text>
-            </TouchableOpacity>
-          </View>
+  <TouchableOpacity
+    className="rounded-2xl p-3 items-center border-4 border-[#e1b5c4]"   // added border
+    onPress={recordOxygen}
+  >
+    <Text className="text-lg font-semibold text-[#a45b6b]">Record Oxygen Level</Text> 
+    {/* text color = darker shade of page bg (#fce4ec → darker shade #a45b6b) */}
+  </TouchableOpacity>
+</View>
 
           {/* Results Display */}
           {showResults && latestReading && (
@@ -386,89 +387,66 @@ const BloodOxygenTracker = () => {
           </View>
 
           {/* View History Button */}
-          <View className="m-4">
-            <TouchableOpacity
-              className="bg-black rounded-2xl p-3 items-center"
-              onPress={async () => {
-                try {
-                  const token = await AsyncStorage.getItem('token') || await AsyncStorage.getItem('userToken');
-                  if (!token) {
-                    Alert.alert('Error', 'Please log in to view history');
-                    return;
-                  }
+{/* View / Hide History Button */}
+<View className="m-4">
+  <TouchableOpacity
+    className="rounded-2xl p-3 items-center border-4 border-[#e1b5c4]"
+    onPress={async () => {
+      if (showHistory) {
+        // Hide history if already shown
+        setShowHistory(false);
+        return;
+      }
 
-                  const response = await fetch(`${BASE_URL}/api/auth/getoxygen`, {
-                    method: 'GET',
-                    headers: {
-                      'Authorization': `Bearer ${token}`,
-                      'Content-Type': 'application/json',
-                    },
-                  });
+      try {
+        const token = await AsyncStorage.getItem('token') || await AsyncStorage.getItem('userToken');
+        if (!token) {
+          Alert.alert('Error', 'Please log in to view history');
+          return;
+        }
 
-                  if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Failed to load blood oxygen records:', response.status, errorText);
-                    Alert.alert('Error', 'Failed to load history. Please try again.');
-                    return;
-                  }
+        const response = await fetch(`${BASE_URL}/api/auth/getoxygen`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
-                  const data = await response.json();
-                  console.log('Fetched oxygen records:', data);
-                  console.log('Data type:', typeof data);
-                  console.log('Data length:', Array.isArray(data) ? data.length : 'Not an array');
-                  
-                  if (!Array.isArray(data)) {
-                    console.error('API response is not an array:', data);
-                    Alert.alert('Error', 'Invalid data format received from server');
-                    return;
-                  }
-                  
-                  const formattedRecords = data.map((record: any) => {
-                    console.log('Processing record:', record);
-                    console.log('Record fields:', Object.keys(record));
-                    
-                    // Handle different possible field names from database
-                    const oxygenLevel = record.oxygen_level || record.oxygenLevel || record.oxygen_level_value;
-                    const heartRate = record.heart_rate || record.heartRate || record.heart_rate_value;
-                    const notes = record.notes || record.notes_text || '';
-                    const timestamp = record.recorded_at || record.timestamp || record.created_at;
-                    
-                    console.log('Mapped values:', { oxygenLevel, heartRate, notes, timestamp });
-                    
-                    return {
-                      id: record.id,
-                      oxygenLevel: oxygenLevel,
-                      heartRate: heartRate || null,
-                      notes: notes,
-                      timestamp: timestamp
-                    };
-                  });
-                  
-                  console.log('Formatted records:', formattedRecords);
-                  
-                  // Validate that we have proper data
-                  const validRecords = formattedRecords.filter(record => {
-                    const isValid = record.id && record.oxygenLevel && record.timestamp;
-                    if (!isValid) {
-                      console.warn('Invalid record found:', record);
-                    }
-                    return isValid;
-                  });
-                  
-                  console.log('Valid records:', validRecords.length, 'out of', formattedRecords.length);
-                  setHistoryRecords(validRecords);
-                  setShowHistory(true);
-                  console.log('History records updated with', validRecords.length, 'records');
-                  Alert.alert('Success', `History loaded successfully! Found ${validRecords.length} records.`);
-                } catch (error) {
-                  console.error('Error loading blood oxygen records:', error);
-                  Alert.alert('Error', 'Failed to load history. Please check your connection and try again.');
-                }
-              }}
-            >
-              <Text className="text-white text-lg font-semibold">View History</Text>
-            </TouchableOpacity>
-          </View>
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Failed to load blood oxygen records:', response.status, errorText);
+          Alert.alert('Error', 'Failed to load history. Please try again.');
+          return;
+        }
+
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+          Alert.alert('Error', 'Invalid data format received from server');
+          return;
+        }
+
+        const formattedRecords = data.map((record: any) => ({
+          id: record.id,
+          oxygenLevel: record.oxygen_level || record.oxygenLevel,
+          heartRate: record.heart_rate || record.heartRate || null,
+          notes: record.notes || '',
+          timestamp: record.recorded_at || record.timestamp,
+        }));
+
+        setHistoryRecords(formattedRecords.filter(r => r.id && r.oxygenLevel && r.timestamp));
+        setShowHistory(true);
+      } catch (error) {
+        console.error('Error loading blood oxygen records:', error);
+        Alert.alert('Error', 'Failed to load history. Please check your connection and try again.');
+      }
+    }}
+  >
+    <Text className="text-lg font-semibold text-[#a45b6b]">
+      {showHistory ? 'Hide History' : 'View History'}
+    </Text>
+  </TouchableOpacity>
+</View>
 
           {/* History Section */}
           {showHistory && (

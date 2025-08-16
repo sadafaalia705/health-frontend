@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Dimensions, SafeAreaView } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import { Thermometer, Calendar, TrendingUp, AlertCircle, Check, Activity } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AlertCircle, Calendar, Check, Thermometer } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Dimensions, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 import BASE_URL from "../../src/config";
 
 interface TemperatureRecord {
@@ -394,66 +394,67 @@ const TemperatureTracker = () => {
 
   return (
     <LinearGradient
-      colors={['#fff5f5', '#fef3c7']}
+      colors={['#f9ecb7ff', '#fceeb6ff']}
       style={{ flex: 1 }}
     >
       <SafeAreaView className="flex-1">
         <ScrollView className="flex-1">
           {/* Header */}
-          <View className="flex-row items-center justify-center mt-6 mb-2">
-            <Thermometer className="w-6 h-6 text-orange-500 mr-8" />
-            <Text className="text-2xl font-bold text-gray-800">Body Temperature</Text>
-          </View>
+          <View className="flex-row items-center justify-center mt-10 mb-6">
+  <Thermometer className="w-6 h-6 text-orange-500 mr-2" />
+  <Text className="text-2xl font-bold text-gray-800">Body Temperature</Text>
+</View>
 
-          {/* Input Form */}
-          <View className="m-2 p-6 rounded-2xl">
-            <View className="mb-4">
-              <Text className="text-gray-600 mb-2">Body Temperature</Text>
-              <View className="flex-row items-center">
-                <TextInput
-                  className="border border-black rounded-lg p-4 text-lg flex-1 bg-transparent"
-                  placeholder={unit === 'C' ? 'e.g., 36.5' : 'e.g., 98.6'}
-                  value={temperature}
-                  onChangeText={setTemperature}
-                  keyboardType="decimal-pad"
-                  maxLength={5}
-                />
-                <View className="flex-row ml-2 border border-black rounded-lg overflow-hidden">
-                  <TouchableOpacity
-                    className={`px-4 py-4 ${unit === 'C' ? 'bg-orange-500' : 'bg-transparent'}`}
-                    onPress={() => setUnit('C')}
-                  >
-                    <Text className={`font-medium ${unit === 'C' ? 'text-white' : 'text-black'}`}>°C</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className={`px-4 py-4 ${unit === 'F' ? 'bg-orange-500' : 'bg-transparent'}`}
-                    onPress={() => setUnit('F')}
-                  >
-                    <Text className={`font-medium ${unit === 'F' ? 'text-white' : 'text-black'}`}>°F</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+{/* Input Form */}
+<View className="m-2 p-6 rounded-2xl">
+  <View className="mb-4">
+    <Text className="text-gray-600 mb-2">Body Temperature</Text>
+    <View className="flex-row items-center">
+      <TextInput
+        className=" rounded-lg p-4 text-lg flex-1 bg-white"
+        placeholder={unit === 'C' ? 'e.g., 36.5' : 'e.g., 98.6'}
+        value={temperature}
+        onChangeText={setTemperature}
+        keyboardType="decimal-pad"
+        maxLength={5}
+      />
+      <View className="flex-row ml-2 rounded-lg overflow-hidden bg-white">
+        <TouchableOpacity
+          className={`px-4 py-4 ${unit === 'C' ? 'bg-orange-500' : 'bg-white'}`}
+          onPress={() => setUnit('C')}
+        >
+          <Text className={`font-medium ${unit === 'C' ? 'text-white' : 'text-black'}`}>°C</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className={`px-4 py-4 ${unit === 'F' ? 'bg-orange-500' : 'bg-white'}`}
+          onPress={() => setUnit('F')}
+        >
+          <Text className={`font-medium ${unit === 'F' ? 'text-white' : 'text-black'}`}>°F</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
 
-            <View className="mb-6">
-              <Text className="text-gray-600 mb-2">Notes (optional)</Text>
-              <TextInput
-                className="border border-black rounded-lg p-4 text-lg h-20 bg-transparent"
-                placeholder="Add any notes..."
-                value={notes}
-                onChangeText={setNotes}
-                multiline
-                textAlignVertical="top"
-              />
-            </View>
+  <View className="mb-6">
+    <Text className="text-gray-600 mb-2">Notes (optional)</Text>
+    <TextInput
+      className=" rounded-lg p-4 text-lg h-20 bg-white"
+      placeholder="Add any notes..."
+      value={notes}
+      onChangeText={setNotes}
+      multiline
+      textAlignVertical="top"
+    />
+  </View>
 
-            <TouchableOpacity
-              className="bg-black rounded-2xl p-3 items-center"
-              onPress={recordTemperature}
-            >
-              <Text className="text-white text-lg font-semibold">Record Temperature</Text>
-            </TouchableOpacity>
-          </View>
+  <TouchableOpacity
+    className="rounded-2xl p-3 items-center border-4"
+    style={{ borderColor: '#bfa300' }}
+    onPress={recordTemperature}
+  >
+    <Text style={{ color: '#bfa300' }} className="text-lg font-semibold">Record Temperature</Text>
+  </TouchableOpacity>
+</View>
 
           {/* Results Display */}
           {showResults && latestReading && (
@@ -569,17 +570,19 @@ const TemperatureTracker = () => {
 
           {/* View History Button */}
           <View className="m-4">
-            <TouchableOpacity
-              className="bg-black rounded-2xl p-3 items-center"
-              onPress={handleViewHistory}
-            >
-              <View className="flex-row items-center">
-                <Calendar className="w-5 h-5 text-white mr-2" />
-                <Text className="text-white text-lg font-semibold">View History</Text>
-              </View>
-              <Text className="text-gray-300 text-sm mt-1">Show all records from database</Text>
-            </TouchableOpacity>
-          </View>
+  <TouchableOpacity
+    className="rounded-2xl p-3 items-center border-4"
+    style={{ borderColor: '#bfa300' }}
+    onPress={() => setShowHistory(!showHistory)}
+  >
+    <View className="flex-row items-center">
+      <Calendar className="w-5 h-5 mr-2" color="#bfa300" />
+      <Text style={{ color: '#bfa300' }} className="text-lg font-semibold">
+        {showHistory ? "Hide History" : "View History"}
+      </Text>
+    </View>
+  </TouchableOpacity>
+</View>
 
           {/* History Records Section - Only show after clicking View History */}
           {showHistory && records.length > 0 && (

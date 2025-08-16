@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Dimensions, RefreshControl } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LineChart } from 'react-native-chart-kit';
-import { Calendar, TrendingUp, AlertCircle, Check, Heart, Activity, Clock, Plus, RefreshCw, BarChart3, FileText, CheckCircle } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Activity, CheckCircle } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Dimensions, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BASE_URL from '../../src/config';
 
 interface SugarRecord {
@@ -277,7 +277,7 @@ export default function AddSugarReading() {
 
   return (
     <LinearGradient
-      colors={['#E6E6FA', '#D8BFD8']}
+      colors={['#D8BFD8', '#D8BFD8']}
       style={{ flex: 1 }}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
@@ -297,68 +297,69 @@ export default function AddSugarReading() {
             </View>
 
             {/* Add Blood Sugar Form */}
-            <View className="m-4 p-6 rounded-2xl">
-              <View className="mb-4">
-                <Text className="text-gray-600 mb-2">Glucose Level (mg/dL)</Text>
-                <TextInput
-                  className="border border-black rounded-lg p-4 text-lg bg-transparent"
-                  placeholder="e.g., 120"
-                  value={glucose}
-                  onChangeText={setGlucose}
-                  keyboardType="numeric"
-                  maxLength={3}
-                />
-              </View>
+<View className="m-4 p-6 rounded-2xl">
+  <View className="mb-4">
+    <Text className="text-gray-600 mb-2">Glucose Level (mg/dL)</Text>
+    <TextInput
+      className="rounded-lg p-4 text-lg bg-white"
+      placeholder="e.g., 120"
+      value={glucose}
+      onChangeText={setGlucose}
+      keyboardType="numeric"
+      maxLength={3}
+    />
+  </View>
 
-              <View className="mb-6">
-                <Text className="text-gray-600 mb-2">Notes (optional)</Text>
-                <TextInput
-                  className="border border-black rounded-lg p-4 text-lg h-20 bg-transparent"
-                  placeholder="Add any notes..."
-                  value={notes}
-                  onChangeText={setNotes}
-                  multiline
-                  textAlignVertical="top"
-                />
-              </View>
+  <View className="mb-6">
+    <Text className="text-gray-600 mb-2">Notes (optional)</Text>
+    <TextInput
+      className="rounded-lg p-4 text-lg h-20 bg-white"
+      placeholder="Add any notes..."
+      value={notes}
+      onChangeText={setNotes}
+      multiline
+      textAlignVertical="top"
+    />
+  </View>
 
-              <View className="mb-6">
-                <Text className="text-gray-600 mb-2">Fasting State</Text>
-                <View className="flex-row">
-                  <TouchableOpacity
-                    className={`px-4 py-2 rounded-full mr-2 ${fastingState === 'Fasting' ? 'bg-black' : 'bg-gray-200'}`}
-                    onPress={() => setFastingState('Fasting')}
-                  >
-                    <Text className={`${fastingState === 'Fasting' ? 'text-white' : 'text-black'}`}>Fasting</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className={`px-4 py-2 rounded-full ${fastingState === 'Post-Meal' ? 'bg-black' : 'bg-gray-200'}`}
-                    onPress={() => setFastingState('Post-Meal')}
-                  >
-                    <Text className={`${fastingState === 'Post-Meal' ? 'text-white' : 'text-black'}`}>Post-Meal</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+  <View className="mb-6">
+    <Text className="text-gray-600 mb-2">Fasting State</Text>
+    <View className="flex-row">
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full mr-2 ${fastingState === 'Fasting' ? 'bg-black' : 'bg-gray-200'}`}
+        onPress={() => setFastingState('Fasting')}
+      >
+        <Text className={`${fastingState === 'Fasting' ? 'text-white' : 'text-black'}`}>Fasting</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        className={`px-4 py-2 rounded-full ${fastingState === 'Post-Meal' ? 'bg-black' : 'bg-gray-200'}`}
+        onPress={() => setFastingState('Post-Meal')}
+      >
+        <Text className={`${fastingState === 'Post-Meal' ? 'text-white' : 'text-black'}`}>Post-Meal</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
 
-              <TouchableOpacity
-                className="bg-black rounded-2xl p-3 items-center"
-                onPress={recordSugar}
-                disabled={loading}
-              >
-                <Text className="text-white text-lg font-semibold">
-                  {loading ? 'Recording...' : 'Record Blood Sugar'}
-                </Text>
-              </TouchableOpacity>
-              
-              {addingRecord && (
-                <View className="mt-3 p-3 bg-green-100 rounded-lg flex-row items-center">
-                  <CheckCircle size={16} color="#16a34a" className="mr-2" />
-                  <Text className="text-green-700 font-medium">
-                    Record added! Refreshing data...
-                  </Text>
-                </View>
-              )}
-            </View>
+{/* Record Button */}
+<TouchableOpacity
+  className="rounded-2xl p-3 items-center border-4 border-[#9370DB]"
+  onPress={recordSugar}
+  disabled={loading}
+>
+  <Text className="text-lg font-semibold text-[#9370DB]">
+    {loading ? 'Recording...' : 'Record Blood Sugar'}
+  </Text>
+</TouchableOpacity>
+
+{addingRecord && (
+  <View className="mt-3 p-3 bg-green-100 rounded-lg flex-row items-center">
+    <CheckCircle size={16} color="#16a34a" className="mr-2" />
+    <Text className="text-green-700 font-medium">
+      Record added! Refreshing data...
+    </Text>
+  </View>
+)}
+</View>
 
             {/* Chart Section */}
             {chartData && (
@@ -394,18 +395,24 @@ export default function AddSugarReading() {
               </View>
             )}
 
-            {/* View History Button */}
-            <View className="m-4">
-              <TouchableOpacity
-                className="bg-black rounded-2xl p-3 items-center"
-                onPress={fetchHistory}
-                disabled={loadingHistory}
-              >
-                <Text className="text-white text-lg font-semibold">
-                  {loadingHistory ? 'Loading...' : 'View History'}
-                </Text>
-              </TouchableOpacity>
-            </View>
+{/* View / Hide History Button */}
+<View className="m-4">
+  <TouchableOpacity
+    className="rounded-2xl p-3 items-center border-4 border-[#9370DB]"
+    onPress={() => {
+      if (showHistory) {
+        setShowHistory(false);
+      } else {
+        fetchHistory();
+      }
+    }}
+    disabled={loadingHistory}
+  >
+    <Text className="text-lg font-semibold text-[#9370DB]">
+      {loadingHistory ? 'Loading...' : showHistory ? 'Hide History' : 'View History'}
+    </Text>
+  </TouchableOpacity>
+</View>
 
             {/* History Records */}
             {showHistory && (

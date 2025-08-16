@@ -1,10 +1,10 @@
-import { useRouter, useFocusEffect } from 'expo-router';
-import React, { useState, useCallback } from 'react';
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BASE_URL from '../../src/config';
 
 // 29 Oxford Happiness Questions
@@ -188,7 +188,7 @@ export default function OxfordHappinessScreen() {
   if (showWelcome) {
     return (
       <LinearGradient
-        colors={['#f4c4f3', '#f4c4f3', '#f4c4f3', '#f4c4f3']} // Solid background color
+        colors={['#f4c4f3', '#f4c4f3']} // Solid background color
         style={styles.container}
       >
         <SafeAreaView style={styles.safeArea}>

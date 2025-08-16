@@ -1,32 +1,24 @@
 // HeartRateTracker.js
-import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
-  View,
+  CheckCircle,
+  Heart
+} from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  Dimensions,
+  RefreshControl,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Alert,
-  RefreshControl,
-  Dimensions,
+  View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { LineChart } from 'react-native-chart-kit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BASE_URL from "../../src/config";
-import { LinearGradient } from 'expo-linear-gradient';
-import { 
-  Heart, 
-  Activity, 
-  Clock, 
-  Plus, 
-  RefreshCw, 
-  TrendingUp, 
-  BarChart3, 
-  FileText,
-  CheckCircle,
-  AlertCircle
-} from 'lucide-react-native';
 
 const API_BASE_URL = `${BASE_URL}/api/heart`; // Updated API URL
 const USER_ID = 1; // Default user ID
@@ -49,6 +41,7 @@ const HeartRateTracker = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [historyRecords, setHistoryRecords] = useState<HeartRateRecord[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [showHeartHistory, setShowHeartHistory] = useState(false);
   
   useEffect(() => {
     fetchHeartRateRecords();
@@ -245,22 +238,12 @@ const HeartRateTracker = () => {
     };
   };
 
-  const chartConfig = {
-    backgroundGradientFrom: '#ffffff',
-    backgroundGradientTo: '#ffffff',
-    color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`, // Red color for heart rate
-    strokeWidth: 2,
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false,
-    decimalPlaces: 0,
-  };
-
   const screenWidth = Dimensions.get('window').width;
   const chartData = getChartData();
 
   return (
     <LinearGradient
-      colors={['#E6E6FA', '#D8BFD8']}
+      colors={['#D8BFD8', '#D8BFD8']}
       style={{ flex: 1 }}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
@@ -284,7 +267,7 @@ const HeartRateTracker = () => {
           <View className="mb-4">
             <Text className="text-gray-600 mb-2">Heart Rate (BPM)</Text>
             <TextInput
-              className="border border-black rounded-lg p-4 text-lg bg-transparent"
+              className=" rounded-lg p-4 text-lg h-15 bg-white"
               placeholder="e.g., 75"
               value={heartRate}
               onChangeText={setHeartRate}
@@ -296,7 +279,7 @@ const HeartRateTracker = () => {
           <View className="mb-6">
             <Text className="text-gray-600 mb-2">Notes (optional)</Text>
             <TextInput
-              className="border border-black rounded-lg p-4 text-lg h-20 bg-transparent"
+              className=" rounded-lg p-4 text-lg h-18 bg-white"
               placeholder="Add any notes..."
               value={notes}
               onChangeText={setNotes}
@@ -306,14 +289,15 @@ const HeartRateTracker = () => {
           </View>
 
           <TouchableOpacity
-            className="bg-black rounded-2xl p-3 items-center"
-            onPress={addHeartRate}
-            disabled={loading}
-          >
-            <Text className="text-white text-lg font-semibold">
-              {loading ? 'Recording...' : 'Record Heart Rate'}
-            </Text>
-          </TouchableOpacity>
+  className="rounded-2xl p-3 items-center border-4"
+  style={{ borderColor: '#c77fc7ff' }}
+  onPress={addHeartRate}
+  disabled={loading}
+>
+  <Text style={{ color: '#c77fc7ff' }} className="text-lg font-semibold">
+    {loading ? 'Recording...' : 'Record Heart Rate'}
+  </Text>
+</TouchableOpacity>
           
           {addingRecord && (
             <View className="mt-3 p-3 bg-green-100 rounded-lg flex-row items-center">
@@ -363,16 +347,17 @@ const HeartRateTracker = () => {
 
         {/* View History Button */}
         <View className="m-4">
-          <TouchableOpacity
-            className="bg-black rounded-2xl p-3 items-center"
-            onPress={fetchHistory}
-            disabled={loadingHistory}
-          >
-            <Text className="text-white text-lg font-semibold">
-              {loadingHistory ? 'Loading...' : 'View History'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+  <TouchableOpacity
+    className="rounded-2xl p-3 items-center border-4"
+    style={{ borderColor: '#c77fc7ff' }}
+    onPress={() => setShowHeartHistory(!showHeartHistory)}
+    disabled={loadingHistory}
+  >
+    <Text style={{ color: '#c77fc7ff' }} className="text-lg font-semibold">
+      {loadingHistory ? 'Loading...' : showHeartHistory ? 'Hide History' : 'View History'}
+    </Text>
+  </TouchableOpacity>
+</View>
 
         {/* History Records */}
         {showHistory && (
